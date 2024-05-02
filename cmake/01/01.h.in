@@ -1,0 +1,2 @@
+#define CMakeStep1_VERSION_MAJOR @CMakeStep1_VERSION_MAJOR@
+#define CMakeStep1_VERSION_MINOR @CMakeStep1_VERSION_MINOR@
