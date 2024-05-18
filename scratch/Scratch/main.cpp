@@ -1,6 +1,9 @@
 #include <QCoreApplication>
 #include <iostream>
 #include <string>
+#include <QSurface>
+#include <QOpenGLWindow>
+
 using namespace std;
 
 template <class XYZ>
@@ -38,10 +41,10 @@ int main(int argc, char *argv[])
         cout << i << ' ' << array[i] << ' ' << &array[i] <<  '\n';
     }
 
-    int myvar;
-    int * myptr;
-    *myptr = myvar;
-    cout << myvar << " " << myptr << " " << *myptr <<  '\n';
+//    int myvar;
+  //  int * myptr = nullptr;
+ //   *myptr = nullptr;
+    //cout << myvar << " " << myptr << " " << *myptr <<  '\n';
 
 
     int * dynptr = new (nothrow) int [5];
