@@ -36,6 +36,15 @@ int sum(const std::initializer_list<int>& list) {
     return total;
 }
 
+//c++17 template for bytes in array
+template <size_t N>
+void arraySize(char (&array)[N]) {
+    for (int i = 0; i < N; ++i) {
+        cout << "array [" << i <<"] = " << array[i] << std::endl;
+    }
+}
+
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -144,12 +153,24 @@ int main(int argc, char *argv[])
     decltype(auto) declo= declk;
     decltype(auto) declp= decll;
 
+    //lambda
+    auto lambdaa =[] (auto add1, auto add2){
+        return add1 + add2;
+    };
+    std::cout <<"Lambda a" << lambdaa(11,22) << std::endl;
+
+
+    //c++ template array size
+    char templateArray[4];
+    arraySize(templateArray);
 
 
 
 
-
-
+    //c++17 static_assert
+    const auto asserta = 5;
+ //   static_assert ( true == false, "True/false assert failed");
+    static_assert (asserta < 10);
 
 
 
