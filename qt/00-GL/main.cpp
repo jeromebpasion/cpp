@@ -26,7 +26,8 @@ int main(int argc, char *argv[])
     QSurfaceFormat::setDefaultFormat(surfaceFormat);
 
     WindowGL windowGL;
-    windowGL.showMaximized();
+    windowGL.resize(600,400);
+    windowGL.show();
 
     return a.exec();
 }
