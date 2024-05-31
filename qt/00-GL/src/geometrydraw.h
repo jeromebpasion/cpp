@@ -5,6 +5,9 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLBuffer>
+#include <QVector3D>
+#include <QVector2D>
+#include <QtDebug>
 
 class GeometryDraw: public QObject, protected QOpenGLFunctions
 {

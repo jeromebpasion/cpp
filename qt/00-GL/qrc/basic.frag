@@ -1,7 +1,15 @@
-uniform sampler2D u_Texture0;
-varying vec4 vary_TexCoord0;
+#ifdef GL_ES
+// Set default precision to medium
+precision mediump int;
+precision mediump float;
+#endif
 
-void main(void)
+uniform sampler2D u_texture;
+
+varying vec2 vary_textureCoord;
+
+void main()
 {
-    gl_FragColor = texture2D(u_Texture0, vary_TexCoord0.st);
+    gl_FragColor = texture2D(u_texture, vary_textureCoord);
 }
+

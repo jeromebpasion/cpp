@@ -15,7 +15,8 @@ set(
     src/geometrydraw.cpp
     main.cpp
     qrc/shaders.qrc
-    )
+    qrc/textures.qrc
+)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
