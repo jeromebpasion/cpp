@@ -133,10 +133,6 @@ void GeometryDraw::initCube(){
       indexBuffer.allocate(vertexIndices, 34 * sizeof(GLushort));
 }
 
-void GeometryDraw::initTriangle(){
-
-}
-
 void GeometryDraw::drawCube(QOpenGLShaderProgram * program) {
     //assume cube data in vbo already
 
@@ -176,5 +172,45 @@ void GeometryDraw::drawCube(QOpenGLShaderProgram * program) {
 
     program->release();
 
+}
 
+void GeometryDraw::initTriangle(){
+
+}
+
+void GeometryDraw::drawTriangle(QOpenGLShaderProgram * program){
+//    uniform mat4 mat_mvp;
+
+//    attribute vec4 a_vertexPos;
+//    attribute vec2 a_textureCoord;
+
+//    varying vec2 vary_textureCoord;
+
+    //assume data in vbo already
+
+    arrayBuffer.bind();
+    indexBuffer.bind();
+
+    //buffer offset. start at beginning of buffer
+    quintptr vertexOffset = 0;
+    int vertexNum = 3, triangles = 1;
+
+    //vertex attribute in the shader (check name in vertex shader)
+    int vertexAttribute = program->attributeLocation("a_vertexPos");
+    if (vertexAttribute == -1){
+        qDebug() << "a_vertexPos location failed";
+    }
+    program->enableAttributeArray(vertexAttribute);
+    program->setAttributeBuffer(vertexAttribute, GL_FLOAT, vertexOffset, vertexNum, sizeof(Vertex));
+
+//    //set up texture location and enable
+//    quintptr textureOffset = sizeof(QVector3D);
+//    int texNum = 2;
+//    int textureAttribute = program->attributeLocation("a_textureCoord");
+//    program->enableAttributeArray(textureAttribute);
+//    program->setAttributeBuffer(textureAttribute, GL_FLOAT, textureOffset, texNum, sizeof(Vertex));
+
+//    glDrawElements(GL_TRIANGLE_STRIP, triangles, GL_UNSIGNED_SHORT, nullptr);
+
+//    program->release();
 }

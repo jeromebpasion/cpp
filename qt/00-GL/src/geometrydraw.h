@@ -18,6 +18,7 @@ public:
 
     void drawGeometry(QOpenGLShaderProgram * program);
     void drawCube(QOpenGLShaderProgram * program);
+    void drawTriangle(QOpenGLShaderProgram * program);
 
 private:
     void initGeometry();

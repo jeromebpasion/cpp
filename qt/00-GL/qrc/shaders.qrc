@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>basic.frag</file>
         <file>basic.vert</file>
+        <file>color.fsh</file>
     </qresource>
 </RCC>

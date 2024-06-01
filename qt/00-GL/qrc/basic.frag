@@ -1,3 +1,5 @@
+#version 330
+
 #ifdef GL_ES
 // Set default precision to medium
 precision mediump int;
@@ -6,7 +8,8 @@ precision mediump float;
 
 uniform sampler2D u_texture;
 
-varying vec2 vary_textureCoord;
+//varying in
+in vec2 vary_textureCoord;
 
 void main()
 {
