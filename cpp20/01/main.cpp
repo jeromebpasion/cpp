@@ -5,6 +5,19 @@
 
 using namespace std;
 
+
+class Entity
+{
+public:
+    Entity(){};
+    ~Entity(){};
+
+protected:
+
+private:
+
+};
+
 int main(int argc, char* argv[]){
 
     //scratch loops

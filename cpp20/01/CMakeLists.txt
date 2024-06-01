@@ -7,8 +7,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 include(CTest)
 enable_testing()
 
-add_executable(Scratch main.cpp)
-
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
+
+set(
+    SOURCES
+    main.cpp
+    )
+
+add_executable(Scratch.exe
+  ${SOURCES}
+)
