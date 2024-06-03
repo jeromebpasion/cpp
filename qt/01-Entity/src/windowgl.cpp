@@ -4,6 +4,12 @@
 WindowGL::WindowGL(){
     p_manager = PhysicsManager::getSingleton();
     e_manager = EntityManager::getSingleton();
+
+    int ent = e_manager->createEntity(Entity::CUBE);
+    int ent2 =e_manager->createEntity(Entity::TRIANGLE);
+
+    e_manager->removeEntity(ent2);
+
 }
 WindowGL::~WindowGL(){
 
@@ -64,7 +70,7 @@ void WindowGL::paintGL(){
     // uniform mat4 mat_mvp;
     //attribute vec4 a_vertexPos;
     //attribute vec2 a_textureCoord;
-    //Svarying vec2 vary_textureCoord;
+    //varying vec2 vary_textureCoord;
 
     //frag shader
     // uniform sampler2D u_texture;
@@ -79,6 +85,7 @@ void WindowGL::paintGL(){
 
     //draw
     geometries->drawCube(&shaderProgram);
+    geometries->drawEntities(&shaderProgram, e_manager);
 }
 
 void WindowGL::initShaders(){

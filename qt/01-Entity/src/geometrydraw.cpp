@@ -215,3 +215,35 @@ void GeometryDraw::drawTriangle(QOpenGLShaderProgram * program){
 
 //    program->release();
 }
+
+void GeometryDraw::drawEntities(QOpenGLShaderProgram * program, const EntityManager * e_manager){
+
+    QList<Entity*> entities = e_manager->drawables();
+    //assume cube data in vbo already
+
+    arrayBuffer.bind();
+    indexBuffer.bind();
+
+    //buffer offset. start at beginning of buffer
+    quintptr vertexOffset = 0;
+    int vertexNum = 3, triangles = 34;
+
+    //vertex attribute in the shader (check name in shader)
+    int vertexAttribute = program->attributeLocation("a_vertexPos");
+    if (vertexAttribute == -1){
+        qDebug() << "a_VertexAttribute location failed";
+    }
+    program->enableAttributeArray(vertexAttribute);
+    program->setAttributeBuffer(vertexAttribute, GL_FLOAT, vertexOffset, vertexNum, sizeof(Vertex));
+
+    //set up texture location and enable
+    quintptr textureOffset = sizeof(QVector3D);
+    int texNum = 2;
+    int textureAttribute = program->attributeLocation("a_textureCoord");
+    program->enableAttributeArray(textureAttribute);
+    program->setAttributeBuffer(textureAttribute, GL_FLOAT, textureOffset, texNum, sizeof(Vertex));
+
+    glDrawElements(GL_TRIANGLE_STRIP, triangles, GL_UNSIGNED_SHORT, nullptr);
+
+    program->release();
+}

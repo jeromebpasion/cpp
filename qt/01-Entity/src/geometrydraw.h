@@ -9,6 +9,8 @@
 #include <QVector2D>
 #include <QtDebug>
 
+#include "entity.h"
+
 class GeometryDraw: public QObject, protected QOpenGLFunctions
 {
     Q_OBJECT
@@ -19,6 +21,7 @@ public:
     void drawGeometry(QOpenGLShaderProgram * program);
     void drawCube(QOpenGLShaderProgram * program);
     void drawTriangle(QOpenGLShaderProgram * program);
+    void drawEntities(QOpenGLShaderProgram * program, const EntityManager * e_manager);
 
 private:
     void initGeometry();
