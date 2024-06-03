@@ -18,6 +18,14 @@ public:
     Entity();
     Entity(SHAPE shape);
 
+    void setShape(SHAPE shape);
+    void setPosition(const QVector3D position);
+    void setRotation(const QQuaternion rotation);
+
+    SHAPE shape() const;
+    QVector3D position() const;
+    QQuaternion rotation() const;
+
 protected:
 
 private:
@@ -37,7 +45,6 @@ private:
 
     QQueue<int>::ConstIterator i_available;
     QMap<int, Entity*>::ConstIterator i_assigned;
-    int MAX_ENTITIES = 200;
 
 public:
     //delete copy constructor and = overload
@@ -54,8 +61,10 @@ public:
     int createEntity(const Entity::SHAPE);
     int removeEntity(const int id);
     int setIdentityProperties(const int id,const Entity::SHAPE);
+    bool isFull();
 
     const QList<Entity*> drawables() const;
+    const static int MAX_ENTITIES = 200;
 
 protected:
 

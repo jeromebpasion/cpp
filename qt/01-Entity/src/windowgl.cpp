@@ -8,7 +8,23 @@ WindowGL::WindowGL(){
     int ent = e_manager->createEntity(Entity::CUBE);
     int ent2 =e_manager->createEntity(Entity::TRIANGLE);
 
-    e_manager->removeEntity(ent2);
+    int shapeInt;
+    int max = EntityManager::MAX_ENTITIES;
+    for (auto i = 0; i < EntityManager::MAX_ENTITIES; ++i){
+
+
+        shapeInt = QRandomGenerator::system()->bounded(0, 3);
+        switch (shapeInt) {
+            case 0:
+                ent = e_manager->createEntity(Entity::CUBE);
+            case 1:
+                ent =e_manager->createEntity(Entity::SPHERE);
+            case 2:
+                ent =e_manager->createEntity(Entity::TRIANGLE);
+        }
+    }
+    e_manager->removeEntity(22);
+    e_manager->removeEntity(33);
 
 }
 WindowGL::~WindowGL(){

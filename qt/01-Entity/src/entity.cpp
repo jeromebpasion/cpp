@@ -24,19 +24,26 @@ EntityManager::EntityManager()
 
 int EntityManager::createEntity(Entity::SHAPE shape)
 {
-    int i = -1;
-    bool empt = _availableEntities.isEmpty();
-    if (!_availableEntities.isEmpty()){
+    if (isFull()){
+        //qDebug() << "Entities full.";
+        return -1;
+    }
+
+        //add some dummy data
         float x = (float) QRandomGenerator::system()->bounded(-1000,1000);
         float y = (float) QRandomGenerator::system()->bounded(-1000,1000);
         float z = (float) QRandomGenerator::system()->bounded(-1000,1000);
         QVector3D pos(x/1000.0, y/1000.0, z/1000.0);
         QQuaternion rot(2.0, -pos);
 
-        i = _availableEntities.dequeue();
-        _assignedEntities.insert(i, new Entity(shape));
-    }
-    return i;
+        int id= _availableEntities.dequeue();
+        Entity * ent = new Entity(shape);
+        ent->setPosition(pos);
+        ent->setRotation(rot);
+
+        _assignedEntities.insert(id, ent);
+
+    return id;
 }
 
 
@@ -45,13 +52,10 @@ int EntityManager::removeEntity(const int id)
     //todo
     int i = -1;
     i_assigned = _assignedEntities.find(id);
-
-    if (i_assigned.key()!= _assignedEntities.end().key()){
-        i = _availableEntities.dequeue();
-        _availableEntities.push_back(i);
+    if (_assignedEntities.remove(id) ==1 ){
         delete i_assigned.value();
         _assignedEntities.remove(i_assigned.key());
-
+        _availableEntities.push_back(id);
     }
 
     return i;
@@ -60,4 +64,28 @@ int EntityManager::removeEntity(const int id)
 const QList<Entity*> EntityManager::drawables() const{
 
     return _assignedEntities.values();
+}
+
+void Entity::setShape(SHAPE shape){
+    _shape = shape;
+}
+void Entity::setPosition(const QVector3D position){
+    _position = position;
+}
+void Entity::setRotation(const QQuaternion rotation){
+    _rotation = rotation;
+}
+
+Entity::SHAPE Entity::shape() const {
+    return _shape;
+}
+QVector3D Entity::position() const{
+    return _position;
+}
+QQuaternion Entity::rotation() const{
+    return _rotation;
+}
+
+bool EntityManager::isFull(){
+    return (_availableEntities.isEmpty() ? true : false);
 }
