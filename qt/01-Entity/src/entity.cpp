@@ -33,13 +33,13 @@ int EntityManager::createEntity(Entity::SHAPE shape)
         float x = (float) QRandomGenerator::system()->bounded(-1000,1000);
         float y = (float) QRandomGenerator::system()->bounded(-1000,1000);
         float z = (float) QRandomGenerator::system()->bounded(-1000,1000);
-        QVector3D pos(x/1000.0, y/1000.0, z/1000.0);
+        QVector3D pos(x/100.0, y/100.0, z/100.0);
         QQuaternion rot(2.0, -pos);
 
         int id= _availableEntities.dequeue();
         Entity * ent = new Entity(shape);
         ent->setPosition(pos);
-        ent->setRotation(rot);
+        ent->setRotation(rot.normalized());
 
         _assignedEntities.insert(id, ent);
 
@@ -83,7 +83,7 @@ QVector3D Entity::position() const{
     return _position;
 }
 QQuaternion Entity::rotation() const{
-    return _rotation;
+    return _rotation.normalized();
 }
 
 bool EntityManager::isFull(){

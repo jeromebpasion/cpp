@@ -152,16 +152,6 @@ void GeometryDraw::drawCube(QOpenGLShaderProgram * program) {
     program->enableAttributeArray(vertexAttribute);
     program->setAttributeBuffer(vertexAttribute, GL_FLOAT, vertexOffset, vertexNum, sizeof(Vertex));
 
-    //vertex
-   // uniform mat4 mat_mvp;
-    //attribute vec4 a_vertexPos;
-    //attribute vec2 a_textureCoord;
-    //Svarying vec2 vary_textureCoord;
-
-    //frag
-   // uniform sampler2D u_texture;
-    //varying vec2 vary_textureCoord;
-
     //set up texture location and enable
     quintptr textureOffset = sizeof(QVector3D);
     int texNum = 2;
@@ -171,7 +161,7 @@ void GeometryDraw::drawCube(QOpenGLShaderProgram * program) {
 
     glDrawElements(GL_TRIANGLE_STRIP, triangles, GL_UNSIGNED_SHORT, nullptr);
 
-    program->release();
+    //program->release();
 
 }
 

@@ -56,7 +56,7 @@ void WindowGL::resizeGL(int width, int height){
 
     //Re-calculate aspect ratio, FOV, and camera-related
     qreal aspectRatio = qreal(width) / qreal(height ? height : 1);
-    const qreal zNearPlane = 3.0, zFarPlane = 7.0, fov = 50;
+    const qreal zNearPlane = 1.0, zFarPlane = 3007.0, fov = 50;
 
     //set new projection matrix
     mat4_projection.setToIdentity();
@@ -79,21 +79,37 @@ void WindowGL::paintGL(){
 
     //Model-View
     QMatrix4x4 mat4_modelview;
-    mat4_modelview.translate(0.0, 0.0, -5.0);
+    mat4_modelview.translate(0.0, 0.0, -50.0);
     mat4_modelview.rotate(quat_rotation);
 
-    //vertex shader
-    // uniform mat4 mat_mvp;
-    //attribute vec4 a_vertexPos;
-    //attribute vec2 a_textureCoord;
-    //varying vec2 vary_textureCoord;
+    mvp_stack.push(mat4_modelview);
+    int count = 0;
+    for(auto i :e_manager->drawables()){
 
-    //frag shader
-    // uniform sampler2D u_texture;
-    //varying vec2 vary_textureCoord;
-    //set model-view-projection matrix in shader
+        mat4_modelview.rotate(i->rotation());
 
-    shaderProgram.setUniformValue("mat_mvp", mat4_projection * mat4_modelview);
+        mat4_modelview.translate(i->position());
+
+        //mat4_modelview.scale(0.3, 0.3, 0.3);
+        shaderProgram.setUniformValue("mat_mvp", mat4_projection * mat4_modelview);
+        switch(i->shape()){
+            case Entity::CUBE:
+                geometries->drawCube(&shaderProgram);
+
+            case Entity::SPHERE:
+                geometries->drawCube(&shaderProgram);
+
+            case Entity::TRIANGLE:
+                geometries->drawCube(&shaderProgram);
+        }
+        count++;
+        //geometries->drawCube(&shaderProgram);
+    }
+    mat4_modelview = mvp_stack.pop();
+
+   // qDebug()<< "Drawing " << count;
+
+//    shaderProgram.setUniformValue("mat_mvp", mat4_projection * mat4_modelview);
 
     //texture at unit 0
     shaderProgram.setUniformValue("u_texture", 0);

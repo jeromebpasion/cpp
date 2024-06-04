@@ -12,10 +12,15 @@
 #include <QVector3D>
 #include <QBasicTimer>
 #include <QMouseEvent>
+#include <QDebug>
+#include <QMatrix4x4>
+#include <QStack>
 
 #include "geometrydraw.h"
 #include "physics.h"
 #include "entity.h"
+
+using MVP = QStack<QMatrix4x4>;
 
 class GeometryDraw;
 
@@ -67,6 +72,8 @@ private:
 
     PhysicsManager * p_manager;
     EntityManager * e_manager;
+
+    MVP mvp_stack;
 };
 
 #endif // WINDOWGL_H

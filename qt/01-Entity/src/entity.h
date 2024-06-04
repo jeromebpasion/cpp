@@ -10,6 +10,7 @@
 #include <QQuaternion>
 #include <QRandomGenerator>
 
+
 class Entity
 {
 public:
