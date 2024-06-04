@@ -15,6 +15,7 @@
 #include <QDebug>
 #include <QMatrix4x4>
 #include <QStack>
+#include <QWheelEvent>
 
 #include "geometrydraw.h"
 #include "physics.h"
@@ -47,6 +48,7 @@ protected:
     void mousePressEvent(QMouseEvent * event) override;
     void mouseReleaseEvent(QMouseEvent * event) override;
     void timerEvent(QTimerEvent *event) override;
+    void wheelEvent(QWheelEvent* event) override;
 
 private:
 
@@ -67,6 +69,11 @@ private:
     QQuaternion quat_rotation;
     QVector2D mousePressPosition;
     qreal angularSpeed = 0;
+    qreal zNearPlane = 1.0;
+    qreal zFarPlane = 3007.0;
+    qreal fov = 45;
+    qreal zoom = -100;
+
 
     const qreal FRICTION = 0.99;
 

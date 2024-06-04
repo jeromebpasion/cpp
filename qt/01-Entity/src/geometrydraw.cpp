@@ -1,7 +1,5 @@
 #include "geometrydraw.h"
 
-
-
 struct Vertex
 {
     QVector3D position;

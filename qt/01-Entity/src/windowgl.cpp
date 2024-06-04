@@ -56,7 +56,6 @@ void WindowGL::resizeGL(int width, int height){
 
     //Re-calculate aspect ratio, FOV, and camera-related
     qreal aspectRatio = qreal(width) / qreal(height ? height : 1);
-    const qreal zNearPlane = 1.0, zFarPlane = 3007.0, fov = 50;
 
     //set new projection matrix
     mat4_projection.setToIdentity();
@@ -79,7 +78,7 @@ void WindowGL::paintGL(){
 
     //Model-View
     QMatrix4x4 mat4_modelview;
-    mat4_modelview.translate(0.0, 0.0, -50.0);
+    mat4_modelview.translate(0.0, 0.0, zoom);
     mat4_modelview.rotate(quat_rotation);
 
     mvp_stack.push(mat4_modelview);
@@ -191,4 +190,12 @@ void WindowGL::timerEvent(QTimerEvent *event){
 
     //update widget
     update();
+}
+
+void WindowGL::wheelEvent(QWheelEvent *event){
+    if(event->angleDelta().y() > 0)
+            zoom += 10;
+    else if(event->angleDelta().y() < 0)
+            zoom -= 10;
+
 }
