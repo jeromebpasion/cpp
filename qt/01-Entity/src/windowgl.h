@@ -76,7 +76,7 @@ private:
     qreal zoom = -100;
 
 
-    const qreal FRICTION = 0.89;
+    const qreal FRICTION = 0.93;
 
     PhysicsManager * p_manager;
     EntityManager * e_manager;

@@ -9,8 +9,6 @@ WindowGL::WindowGL(){
     p_manager = PhysicsManager::getSingleton();
     e_manager = EntityManager::getSingleton();
 
-    int ent = e_manager->createEntity(Entity::CUBE);
-    int ent2 =e_manager->createEntity(Entity::PYRAMID);
 
     int shapeInt;
     int max = EntityManager::MAX_ENTITIES;
@@ -20,11 +18,11 @@ WindowGL::WindowGL(){
         shapeInt = QRandomGenerator::system()->bounded(0, 3);
         switch (shapeInt) {
             case 0:
-                ent = e_manager->createEntity(Entity::CUBE);
+                e_manager->createEntity(Entity::CUBE);
             case 1:
-                ent =e_manager->createEntity(Entity::SPHERE);
+                e_manager->createEntity(Entity::SPHERE);
             case 2:
-                ent =e_manager->createEntity(Entity::PYRAMID);
+                e_manager->createEntity(Entity::PYRAMID);
         }
     }
     e_manager->removeEntity(22);

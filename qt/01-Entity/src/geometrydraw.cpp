@@ -8,16 +8,18 @@ struct Vertex
 
 
 GeometryDraw::GeometryDraw()
-    : cube_index(QOpenGLBuffer::IndexBuffer)
 {
     //Qt OpenGL init in QOpenGLFunctions
     initializeOpenGLFunctions();
 
     //vbos
     cube_buffer.create();
+    cube_index = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
     cube_index.create();
 
+
     pyramid_buffer.create();
+    //pyramid_index = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
     pyramid_index.create();
     pyramid_colors.create();
 
@@ -201,7 +203,7 @@ void GeometryDraw::drawPyramid(QOpenGLShaderProgram * program){
     glVertexAttribPointer(colorAttribute, 3, GL_FLOAT, GL_FALSE, 0, colors);
     glEnableVertexAttribArray(colorAttribute);
 
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, nullptr);
+    glDrawElements(GL_TRIANGLE_FAN, 6, GL_UNSIGNED_SHORT, nullptr);
     glDisableVertexAttribArray(colorAttribute);
 
     //program->release();
