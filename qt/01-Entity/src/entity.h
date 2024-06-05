@@ -14,7 +14,7 @@
 class Entity
 {
 public:
-    enum SHAPE {CUBE, SPHERE, TRIANGLE};
+    enum SHAPE {CUBE, SPHERE, PYRAMID};
 
     Entity();
     Entity(SHAPE shape);

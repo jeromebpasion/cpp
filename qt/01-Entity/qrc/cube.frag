@@ -1,3 +1,5 @@
+//cube.frag Cube Fragment Shader
+
 #version 330
 
 #ifdef GL_ES

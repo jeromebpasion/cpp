@@ -2,11 +2,15 @@
 
 
 WindowGL::WindowGL(){
+
+    cube_program = new QOpenGLShaderProgram();
+    pyramid_program = new QOpenGLShaderProgram();
+
     p_manager = PhysicsManager::getSingleton();
     e_manager = EntityManager::getSingleton();
 
     int ent = e_manager->createEntity(Entity::CUBE);
-    int ent2 =e_manager->createEntity(Entity::TRIANGLE);
+    int ent2 =e_manager->createEntity(Entity::PYRAMID);
 
     int shapeInt;
     int max = EntityManager::MAX_ENTITIES;
@@ -20,7 +24,7 @@ WindowGL::WindowGL(){
             case 1:
                 ent =e_manager->createEntity(Entity::SPHERE);
             case 2:
-                ent =e_manager->createEntity(Entity::TRIANGLE);
+                ent =e_manager->createEntity(Entity::PYRAMID);
         }
     }
     e_manager->removeEntity(22);
@@ -31,7 +35,9 @@ WindowGL::~WindowGL(){
 
     makeCurrent();
     delete geometries;
-    delete texture;
+    delete cube_texture;
+    delete cube_program;
+    delete pyramid_program;
     doneCurrent();
 
 }
@@ -71,10 +77,6 @@ void WindowGL::paintGL(){
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
 
-    //re-bind vertex and fragment shader
-    texture->bind();
-
-    shaderProgram.bind();
 
     //Model-View
     QMatrix4x4 mat4_modelview;
@@ -85,81 +87,81 @@ void WindowGL::paintGL(){
     int count = 0;
     for(auto i :e_manager->drawables()){
 
-        mat4_modelview.rotate(i->rotation());
-
-        mat4_modelview.translate(i->position());
-
-        //mat4_modelview.scale(0.3, 0.3, 0.3);
-        shaderProgram.setUniformValue("mat_mvp", mat4_projection * mat4_modelview);
         switch(i->shape()){
             case Entity::CUBE:
-                geometries->drawCube(&shaderProgram);
+            mat4_modelview.translate(i->position());
+            mat4_modelview.rotate(i->rotation());
+            cube_program->setUniformValue("mat_mvp", mat4_projection * mat4_modelview);
+            cube_texture->bind();
+            cube_program->bind();
+            geometries->drawCube(cube_program);
 
             case Entity::SPHERE:
-                geometries->drawCube(&shaderProgram);
+            mat4_modelview.translate(i->position());
+            mat4_modelview.rotate(i->rotation());
+            cube_program->setUniformValue("mat_mvp", mat4_projection * mat4_modelview);
+            //geometries->drawCube(cube_program);
 
-            case Entity::TRIANGLE:
-                geometries->drawCube(&shaderProgram);
+            case Entity::PYRAMID:
+            mat4_modelview.translate(i->position());
+            mat4_modelview.rotate(i->rotation());
+            cube_program->setUniformValue("mat_mvp", mat4_projection * mat4_modelview);
+            pyramid_program->bind();
+            geometries->drawPyramid(pyramid_program);
         }
+
         count++;
-        //geometries->drawCube(&shaderProgram);
     }
     mat4_modelview = mvp_stack.pop();
 
-   // qDebug()<< "Drawing " << count;
-
-//    shaderProgram.setUniformValue("mat_mvp", mat4_projection * mat4_modelview);
-
-    //texture at unit 0
-    shaderProgram.setUniformValue("u_texture", 0);
-
-
     //draw
-    geometries->drawCube(&shaderProgram);
-    geometries->drawEntities(&shaderProgram, e_manager);
+    geometries->drawEntities(cube_program, e_manager);
 }
 
 void WindowGL::initShaders(){
 
-    shaderProgram.create();
-
+    //initialize Cube shaders first. with texture
+    cube_program->create();
     try {
-        shaderProgram.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/basic.frag");
+        cube_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/cube.frag");
+        cube_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/cube.vert");
+        cube_program->link();
+        cube_program->bind();
+
+        QString cubelog = cube_program->log();
+        if (!cubelog.isEmpty())
+            qDebug() << cubelog;
     }  catch (...) {
-        qDebug() << "Exception Fragment Shader: \n";
-        qDebug() << shaderProgram.log();
+        qDebug() << "Exception Cube Shader: \n";
+        qDebug() << cube_program->log();
     }
 
+    //initialize Pyramid. With basic colors
+    pyramid_program->create();
     try {
-        shaderProgram.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/basic.vert");
-    }  catch (...) {
-        qDebug() << "Exception Vertex Shader: \n";
-        qDebug() << shaderProgram.log();
-    }
+        pyramid_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/pyramid.frag");
+        pyramid_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/pyramid.vert");
+        pyramid_program->link();
+        pyramid_program->bind();
 
-    try {
-        shaderProgram.link();
+        QString pyramidlog = pyramid_program->log();
+        if (!pyramidlog.isEmpty())
+            qDebug() << pyramidlog;
     }  catch (...) {
-        qDebug() << "Exception Linking: \n";
-        qDebug() << shaderProgram.log();
-    }
-    try {
-        shaderProgram.bind();
-    }  catch (...) {
-        qDebug() << "Exception Binding: \n";
-        qDebug() << shaderProgram.log();
+        qDebug() << "Exception Pyramid Shader: \n";
+        qDebug() << pyramid_program->log();
     }
 
 }
 
 void WindowGL::initTextures(){
 
-    texture = new QOpenGLTexture(QImage(":/cube.png").mirrored());
+    cube_texture = new QOpenGLTexture(QImage(":/cube.png").mirrored());
 
-    texture->setMinificationFilter(QOpenGLTexture::Nearest);
-    texture->setMagnificationFilter(QOpenGLTexture::Linear);
+    cube_texture->setMinificationFilter(QOpenGLTexture::Nearest);
+    cube_texture->setMagnificationFilter(QOpenGLTexture::Linear);
 
-    texture->setWrapMode(QOpenGLTexture::Repeat);
+    cube_texture->setWrapMode(QOpenGLTexture::Repeat);
 }
 
 void WindowGL::mousePressEvent(QMouseEvent * event){

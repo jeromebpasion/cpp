@@ -52,16 +52,17 @@ protected:
 
 private:
 
-    //GL
-    QOpenGLShaderProgram shaderProgram;
+    //GL programs
+    QOpenGLShaderProgram *cube_program = nullptr;
+    QOpenGLShaderProgram * pyramid_program = nullptr;
+    QOpenGLTexture * cube_texture = nullptr;
 
     //State
     QMatrix4x4 mat4_projection;
-    //QMatrix4x4 mat4_modelview;
+    MVP mvp_stack;
 
-    //Rendering and texture
+    //Rendering
     GeometryDraw *geometries = nullptr;
-    QOpenGLTexture *texture = nullptr;
 
     //timer for auto calls, controls
     QBasicTimer timer;
@@ -75,12 +76,11 @@ private:
     qreal zoom = -100;
 
 
-    const qreal FRICTION = 0.99;
+    const qreal FRICTION = 0.89;
 
     PhysicsManager * p_manager;
     EntityManager * e_manager;
 
-    MVP mvp_stack;
 };
 
 #endif // WINDOWGL_H

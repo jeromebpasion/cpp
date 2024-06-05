@@ -20,17 +20,22 @@ public:
 
     void drawGeometry(QOpenGLShaderProgram * program);
     void drawCube(QOpenGLShaderProgram * program);
-    void drawTriangle(QOpenGLShaderProgram * program);
+    void drawPyramid(QOpenGLShaderProgram * program);
     void drawEntities(QOpenGLShaderProgram * program, const EntityManager * e_manager);
 
 private:
     void initGeometry();
     void initCube();
-    void initTriangle();
+    void initPyramid();
 
     //vbo fbo
-    QOpenGLBuffer arrayBuffer;
-    QOpenGLBuffer indexBuffer;
+    QOpenGLBuffer cube_buffer;
+    QOpenGLBuffer cube_index;
+    QOpenGLBuffer pyramid_buffer;
+    QOpenGLBuffer pyramid_index;
+    QOpenGLBuffer pyramid_colors;
+    QOpenGLBuffer buffer_sphere;
+    QOpenGLBuffer index_sphere;
 };
 
 #endif // GEOMETRYDRAW_H
