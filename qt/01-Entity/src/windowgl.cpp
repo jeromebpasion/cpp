@@ -25,6 +25,8 @@ WindowGL::WindowGL(){
                 e_manager->createEntity(Entity::PYRAMID);
         }
     }
+
+    //test removing of entity
     e_manager->removeEntity(22);
     e_manager->removeEntity(33);
 
@@ -54,66 +56,6 @@ void WindowGL::initializeGL(){
 
     timer.start(12, this);
 
-}
-
-void WindowGL::resizeGL(int width, int height){
-
-    //Re-calculate aspect ratio, FOV, and camera-related
-    qreal aspectRatio = qreal(width) / qreal(height ? height : 1);
-
-    //set new projection matrix
-    mat4_projection.setToIdentity();
-    mat4_projection.perspective(fov, aspectRatio, zNearPlane, zFarPlane);
-
-}
-
-//re-set GL settings, buffers, state, render call
-void WindowGL::paintGL(){
-
-    //reset GL context
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-
-
-    //Model-View
-    QMatrix4x4 mat4_modelview;
-    mat4_modelview.translate(0.0, 0.0, zoom);
-    mat4_modelview.rotate(quat_rotation);
-
-    mvp_stack.push(mat4_modelview);
-    int count = 0;
-    for(auto i :e_manager->drawables()){
-
-        switch(i->shape()){
-            case Entity::CUBE:
-            mat4_modelview.translate(i->position());
-            mat4_modelview.rotate(i->rotation());
-            cube_program->setUniformValue("mat_mvp", mat4_projection * mat4_modelview);
-            cube_texture->bind();
-            cube_program->bind();
-            geometries->drawCube(cube_program);
-
-            case Entity::SPHERE:
-            mat4_modelview.translate(i->position());
-            mat4_modelview.rotate(i->rotation());
-            cube_program->setUniformValue("mat_mvp", mat4_projection * mat4_modelview);
-            //geometries->drawCube(cube_program);
-
-            case Entity::PYRAMID:
-            mat4_modelview.translate(i->position());
-            mat4_modelview.rotate(i->rotation());
-            cube_program->setUniformValue("mat_mvp", mat4_projection * mat4_modelview);
-            pyramid_program->bind();
-            geometries->drawPyramid(pyramid_program);
-        }
-
-        count++;
-    }
-    mat4_modelview = mvp_stack.pop();
-
-    //draw
-    geometries->drawEntities(cube_program, e_manager);
 }
 
 void WindowGL::initShaders(){
@@ -190,6 +132,7 @@ void WindowGL::timerEvent(QTimerEvent *event){
 
     //update widget
     update();
+    rollAngle += 0.6;
 }
 
 void WindowGL::wheelEvent(QWheelEvent *event){
@@ -198,4 +141,91 @@ void WindowGL::wheelEvent(QWheelEvent *event){
     else if(event->angleDelta().y() < 0)
             zoom -= 10;
 
+}
+
+void WindowGL::keyPressEvent(QKeyEvent *event) {
+    if(event->key() == Qt::Key_W)
+    {
+        camY -= camStep;
+    }
+    if(event->key() == Qt::Key_S)
+    {
+        camY += camStep;
+    }
+    if(event->key() == Qt::Key_A)
+    {
+        camX += camStep;
+    }
+    if(event->key() == Qt::Key_D)
+    {
+        camX -= camStep;
+    }
+}
+
+void WindowGL::resizeGL(int width, int height){
+
+    //Re-calculate aspect ratio, FOV, and camera-related
+    qreal aspectRatio = qreal(width) / qreal(height ? height : 1);
+
+    //set new projection matrix
+    mat4_projection.setToIdentity();
+    mat4_projection.perspective(fov, aspectRatio, zNearPlane, zFarPlane);
+
+}
+
+//re-set GL settings, buffers, state, render call
+void WindowGL::paintGL(){
+
+    //reset GL context
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
+
+    //Model-View
+    QMatrix4x4 mat4_modelview;
+    mat4_modelview.translate(camX, camY, zoom);
+    mat4_modelview.rotate(quat_rotation);
+
+    mvp_stack.push(mat4_modelview);
+    int count = 0;
+    for(auto i :e_manager->drawables()){
+
+        switch(i->shape()){
+
+            case Entity::SPHERE:
+
+            //todo: use cube for now;
+            //break;
+
+            case Entity::CUBE:
+            mat4_modelview.translate(i->position());
+            mat4_modelview.rotate(i->rotation());
+            mat4_modelview.rotate(QQuaternion::fromEulerAngles(0,rollAngle,rollAngle));
+            cube_program->setUniformValue("mat_mvp", mat4_projection * mat4_modelview);
+            cube_texture->bind();
+            geometries->drawCube(cube_program);
+            //cube_program->release();
+
+            break;
+
+            case Entity::PYRAMID:
+            mat4_modelview.translate(i->position());
+
+            mat4_modelview.rotate(QQuaternion::fromEulerAngles(0,rollAngle,rollAngle));
+            mat4_modelview.rotate(i->rotation());
+
+            cube_program->setUniformValue("mat_mvp", mat4_projection * mat4_modelview);
+            geometries->drawPyramid(pyramid_program);
+            //pyramid_program->release();
+            break;
+        }
+
+        count++;
+        mat4_modelview = mvp_stack.top();
+    }
+    mat4_modelview = mvp_stack.pop();
+
+    //draw
+    //geometries->drawEntities(cube_program, e_manager);
 }

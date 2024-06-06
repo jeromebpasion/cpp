@@ -49,6 +49,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent * event) override;
     void timerEvent(QTimerEvent *event) override;
     void wheelEvent(QWheelEvent* event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 private:
 
@@ -71,12 +72,15 @@ private:
     QVector2D mousePressPosition;
     qreal angularSpeed = 0;
     qreal zNearPlane = 1.0;
-    qreal zFarPlane = 3007.0;
+    qreal zFarPlane = 500.0;
     qreal fov = 45;
     qreal zoom = -100;
+    qreal rollAngle = 0.0;
+    qreal camX = 0.0;
+    qreal camY = 0.0;
+    qreal camStep = 1.0;
 
-
-    const qreal FRICTION = 0.93;
+    const qreal FRICTION = 0.85;
 
     PhysicsManager * p_manager;
     EntityManager * e_manager;

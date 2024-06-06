@@ -13,15 +13,17 @@ GeometryDraw::GeometryDraw()
     initializeOpenGLFunctions();
 
     //vbos
+    pyramid_buffer.create();
+    //pyramid_index = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
+    pyramid_index.create();
+    pyramid_colors.create();
+
     cube_buffer.create();
     cube_index = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
     cube_index.create();
 
 
-    pyramid_buffer.create();
-    //pyramid_index = QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
-    pyramid_index.create();
-    pyramid_colors.create();
+    qDebug() << cube_index.type() << pyramid_index.type();
 
     initGeometry();
 }
@@ -45,7 +47,6 @@ void GeometryDraw::initGeometry(){
 //initialize cube geometry and load into vbo
 void GeometryDraw::initCube(){
 
-
     GLushort vertexIndices[] = { // 34 indices
         0,  1,  2,  3,  3,     // Face 0 - triangle strip ( v0,  v1,  v2,  v3)
         4,  4,  5,  6,  7,  7, // Face 1 - triangle strip ( v4,  v5,  v6,  v7)
@@ -55,9 +56,7 @@ void GeometryDraw::initCube(){
        20, 20, 21, 22, 23      // Face 5 - triangle strip (v20, v21, v22, v23)
     };
 
-
-
-  Vertex vertices[]  = {
+  Vertex vertices[]  = {    //24 vertices
             // Vertex data for face 0
             {QVector3D(-1.0f, -1.0f,  1.0f), QVector2D(0.0f, 0.0f)},  // v0
             {QVector3D( 1.0f, -1.0f,  1.0f), QVector2D(0.33f, 0.0f)}, // v1
@@ -103,6 +102,47 @@ void GeometryDraw::initCube(){
       cube_index.allocate(vertexIndices, 34 * sizeof(GLushort));
 }
 
+void GeometryDraw::initPyramid(){
+
+//    const QVector3D verticesIndexed[] = {  //rectangle base
+//    QVector3D(-1.0f, -1.0f, 0.0f),  //base 0
+//    QVector3D(1.0f, -1.0f, 0.0f),   //base 1
+//    QVector3D(1.0f, 1.0f, 0.0f),    //base 2
+//    QVector3D(-1.0f, 1.0f, 0.0f),   //base 3
+//    QVector3D(0.0f, 0.0f, 2.0f)     //top  4
+//    };
+//    pyramid_buffer.bind();
+//    pyramid_buffer.allocate(verticesIndexed, 5 * sizeof(QVector3D));
+
+//    const GLushort vertexIndices[] = {  //ccw order
+//        2, 1, 0,    3, 2, 0,                            //base triangle 1 and 2
+//        0, 1, 4,    1, 2, 4,    2, 3, 4,    3, 0, 4     //side triangles
+//    };
+//    pyramid_index.bind();
+//    pyramid_index.allocate(vertexIndices, 18 * sizeof(GLushort));
+
+
+    const QVector3D vertices[] = {  //rectangle base
+    QVector3D(1.0f, 1.0f, 0.0f),    QVector3D(1.0f, -1.0f, 0.0f),   QVector3D(-1.0f, -1.0f, 0.0f),  //2 1 0
+    QVector3D(-1.0f, 1.0f, 0.0f),   QVector3D(1.0f, 1.0f, 0.0f),    QVector3D(-1.0f, -1.0f, 0.0f),  //3 2 0
+    QVector3D(-1.0f, -1.0f, 0.0f),  QVector3D(1.0f, -1.0f, 0.0f),   QVector3D(0.0f, 0.0f, 2.0f),    //0 1 4
+    QVector3D(1.0f, -1.0f, 0.0f),   QVector3D(1.0f, 1.0f, 0.0f),    QVector3D(0.0f, 0.0f, 2.0f),    //1 2 4
+    QVector3D(1.0f, 1.0f, 0.0f),    QVector3D(-1.0f, 1.0f, 0.0f),   QVector3D(0.0f, 0.0f, 2.0f),    //2 3 4
+    QVector3D(-1.0f, 1.0f, 0.0f),   QVector3D(-1.0f, -1.0f, 0.0f),  QVector3D(0.0f, 0.0f, 2.0f)     //3 0 4
+    };
+    pyramid_buffer.bind();
+    pyramid_buffer.allocate(vertices, 18 * sizeof(QVector3D));
+
+
+    const GLfloat colors[] = {
+        1.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 1.0f
+    };
+    pyramid_colors.bind();
+    pyramid_colors.allocate(colors, 9 * sizeof(GLfloat));
+}
+
 //draw the cube. bind buffers, link attributes/varying, call glDrawElements
 void GeometryDraw::drawCube(QOpenGLShaderProgram * program) {
 
@@ -132,51 +172,15 @@ void GeometryDraw::drawCube(QOpenGLShaderProgram * program) {
     glDrawElements(GL_TRIANGLE_STRIP, 34, GL_UNSIGNED_SHORT, nullptr);
 
     //program->release();
-
-}
-
-void GeometryDraw::initPyramid(){
-
-    const QVector3D vertices[] = {
-    QVector3D(-1.0f, -1.0f, 0.0f),  //base 0
-    QVector3D(1.0f, -1.0f, 0.0f),   //base 1
-    QVector3D(1.0f, 1.0f, 0.0f),    //base 2
-    QVector3D(-1.0f, 1.0f, 0.0f),   //base 3
-    QVector3D(0.0f, 0.0f, 2.0f)     //top  4
-    };
-
-    const GLushort vertexIndices[] = {
-        0, 1, 2,    0, 2, 3,                            //base triangle 1 and 2
-        0, 1, 4,    1, 2, 4,    2, 3, 4,    3, 1, 4     //side triangles
-    };
-
-    const GLfloat colors[] = {
-        1.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 1.0f
-    };
-
-    pyramid_buffer.bind();
-    pyramid_buffer.allocate(vertices, 5 * sizeof(QVector3D));
-
-    pyramid_buffer.bind();
-    pyramid_buffer.allocate(vertexIndices, 18 * sizeof(GLushort));
-
-    pyramid_colors.bind();
-    pyramid_buffer.allocate(colors, 9 * sizeof(GLfloat));
 }
 
 void GeometryDraw::drawPyramid(QOpenGLShaderProgram * program){
 
     program->bind();
-
     pyramid_buffer.bind();
     pyramid_index.bind();
     pyramid_colors.bind();
 
-    //buffer offset. start at beginning of buffer
-    quintptr offset = 0;
-    int vertexNum = 3, vertexNumber = 3;
 
     //vertex attribute in the vertex shader (check name in vertex shader)
     int vertexAttribute = program->attributeLocation("a_vertexPos");
@@ -190,25 +194,17 @@ void GeometryDraw::drawPyramid(QOpenGLShaderProgram * program){
     }
 
     program->enableAttributeArray(vertexAttribute);
-    program->setAttributeBuffer(vertexAttribute, GL_FLOAT, offset, vertexNum, 0);
+    program->setAttributeBuffer(vertexAttribute, GL_FLOAT, 0, 3, 0);
 
-//    program->enableAttributeArray(colorAttribute);
-//    program->setAttributeBuffer(colorAttribute, GL_FLOAT, offset, vertexNum, 0);
+    program->enableAttributeArray(colorAttribute);
 
-    const GLfloat colors[] = {
-        1.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 1.0f
-    };
-    glVertexAttribPointer(colorAttribute, 3, GL_FLOAT, GL_FALSE, 0, colors);
-    glEnableVertexAttribArray(colorAttribute);
 
-    glDrawElements(GL_TRIANGLE_FAN, 6, GL_UNSIGNED_SHORT, nullptr);
-    glDisableVertexAttribArray(colorAttribute);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 
     //program->release();
 }
 
+//todo: move all the drawing into here
 void GeometryDraw::drawEntities(QOpenGLShaderProgram * program, const EntityManager * e_manager){
 
     QList<Entity*> entities = e_manager->drawables();

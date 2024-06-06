@@ -30,9 +30,9 @@ int EntityManager::createEntity(Entity::SHAPE shape)
     }
 
         //add some dummy data
-        float x = (float) QRandomGenerator::system()->bounded(-1000,1000);
-        float y = (float) QRandomGenerator::system()->bounded(-1000,1000);
-        float z = (float) QRandomGenerator::system()->bounded(-1000,1000);
+        float x = (float) QRandomGenerator::system()->bounded(-5000,5000);
+        float y = (float) QRandomGenerator::system()->bounded(-5000,5000);
+        float z = (float) QRandomGenerator::system()->bounded(-5000,5000);
         QVector3D pos(x/100.0, y/100.0, z/100.0);
         QQuaternion rot(2.0, -pos);
 
