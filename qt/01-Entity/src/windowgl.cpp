@@ -215,7 +215,7 @@ void WindowGL::paintGL(){
             mat4_modelview.rotate(QQuaternion::fromEulerAngles(0,rollAngle,rollAngle));
             mat4_modelview.rotate(i->rotation());
 
-            cube_program->setUniformValue("mat_mvp", mat4_projection * mat4_modelview);
+            pyramid_program->setUniformValue("mat_mvp", mat4_projection * mat4_modelview);
             geometries->drawPyramid(pyramid_program);
             //pyramid_program->release();
             break;
