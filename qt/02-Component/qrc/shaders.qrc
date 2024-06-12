@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>cube.frag</file>
+        <file>cube.vert</file>
+        <file>pyramid.frag</file>
+        <file>pyramid.vert</file>
+    </qresource>
+</RCC>
