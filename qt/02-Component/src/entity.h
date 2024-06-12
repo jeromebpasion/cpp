@@ -66,7 +66,7 @@ public:
     bool isFull();
 
     const QList<Entity*> drawables() const;
-    const static int MAX_ENTITIES = 2000;
+    const static int MAX_ENTITIES = 10000;
 
     const QList<QBitArray*> signature() const;
 

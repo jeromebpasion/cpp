@@ -128,41 +128,39 @@ void GeometryDraw::drawPyramid(QOpenGLShaderProgram * program){
         1.0f, 0.0f, 1.0f,
         1.0f, 0.0f, 1.0f
     };
+
+    //move to VAO in phase 3 (render system)
 //    pyramid_colors.create();
+//    pyramid_colors.bind();
 //    pyramid_colors.allocate(colors, 54 * sizeof(GLfloat));
 
-//    pyramid_buffer = QOpenGLBuffer
 //    pyramid_buffer.create();
+//    pyramid_buffer.bind();
 //    pyramid_buffer.allocate(vertices, 54 * sizeof(GLfloat));
 
-    program->enableAttributeArray(vertexAttribute);
-    program->setAttributeBuffer(vertexAttribute, GL_FLOAT, 0, 3, 0);
-    glVertexAttribPointer(vertexAttribute, 3, GL_FLOAT, GL_FALSE, 0, vertices);
-    glVertexAttribPointer(colorAttribute, 3, GL_FLOAT, GL_FALSE, 0, colors);
-
-    glEnableVertexAttribArray(vertexAttribute);
-    glEnableVertexAttribArray(colorAttribute);
-
-    glDrawArrays(GL_TRIANGLES, 0,3);
-    glDrawArrays(GL_TRIANGLES, 3, 3);
-    glDrawArrays(GL_TRIANGLES, 6, 3);
-    glDrawArrays(GL_TRIANGLES, 9, 3);
-    glDrawArrays(GL_TRIANGLES, 12, 3);
-    glDrawArrays(GL_TRIANGLES, 15, 3);
-
-    glDisableVertexAttribArray(colorAttribute);
-    glDisableVertexAttribArray(vertexAttribute);
-
-//    program->release();
 //    program->enableAttributeArray(vertexAttribute);
 //    program->setAttributeBuffer(vertexAttribute, GL_FLOAT, 0, 3, 0);
 
 //    program->enableAttributeArray(colorAttribute);
+//    program->setAttributeBuffer(colorAttribute, GL_FLOAT, 0, 3, 0);
+
+//    glDrawElements(GL_TRIANGLES, 15, GL_FLOAT, nullptr);
+
+//    program->disableAttributeArray(colorAttribute);
+//    program->disableAttributeArray(vertexAttribute);
 
 
-//    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 
-    //program->release();
+    glEnableVertexAttribArray(vertexAttribute);
+    glEnableVertexAttribArray(colorAttribute);
+    glVertexAttribPointer(vertexAttribute, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+    glVertexAttribPointer(colorAttribute, 3, GL_FLOAT, GL_FALSE, 0, colors);
+    glDrawArrays(GL_TRIANGLES, 0, 18);
+    glDisableVertexAttribArray(colorAttribute);
+    glDisableVertexAttribArray(vertexAttribute);
+
+
+
 }
 
 //todo: move all the drawing into here

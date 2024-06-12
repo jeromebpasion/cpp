@@ -80,7 +80,7 @@ private:
     qreal camY = 0.0;
     qreal camStep = 1.0;
 
-    const qreal FRICTION = 0.85;
+    const qreal FRICTION = 0.98;
 
     PhysicsManager * p_manager;
     EntityManager * e_manager;

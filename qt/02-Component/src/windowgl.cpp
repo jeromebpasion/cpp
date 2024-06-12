@@ -154,13 +154,15 @@ void WindowGL::paintGL(){
     //reset GL context
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_CULL_FACE);
-    glDisable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    //glDisable(GL_CULL_FACE);
 
     //Model-View
     QMatrix4x4 mat4_modelview;
     mat4_modelview.translate(camX, camY, zoom);
     mat4_modelview.rotate(quat_rotation);
+
     mvp_stack.push(mat4_modelview);
     int count = 0;
     for(auto i :e_manager->drawables()){
